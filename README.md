@@ -1,8 +1,7 @@
 Applause tester matcher application by Krzysztof Mosek
 
 ## Pre-requisites
-* Ideally java 17 on your machine, as it was developed and tested on that particular version. \
-Should work on  Java 8 >= as well.
+* Java 17 >= as well. (tested on OpenJDK Runtime Environment `Corretto-17.0.6.10.1 (build 17.0.6+10-LTS`)
 * Docker >= 20 installed on your machine (tested on Docker version `20.10.7`, `build f0df350`)
 * port `8080` should be available on your machine
 ## How to run
