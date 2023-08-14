@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: 'mysql:8.0'
+    container_name: mysqldb
+    environment:
+      - 'MYSQL_DATABASE=applause_matcher'
+      - 'MYSQL_PASSWORD=secret'
+      - 'MYSQL_ROOT_PASSWORD=verysecret'
+      - 'MYSQL_USER=applause_matcher'
+      - 'TZ=Europe/Warsaw'
+    ports:
+      - '3306:3306'
+    networks:
+      - tm_network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 3s
+      retries: 5
+
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: applause-matcher
+    ports:
+      - '8080:8080'
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - tm_network
+
+networks:
+  tm_network:
+
+
+
