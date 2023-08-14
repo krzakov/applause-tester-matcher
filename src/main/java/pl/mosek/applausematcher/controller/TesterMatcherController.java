@@ -66,7 +66,7 @@ public interface TesterMatcherController {
                     )
             }
     )
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     List<MatchedTesterResponseDto> findMatchingTesters(
             @Parameter(description = "Set of country codes compliant with ISO 3166-1 alpha-2",
                     example = "US,JP",
