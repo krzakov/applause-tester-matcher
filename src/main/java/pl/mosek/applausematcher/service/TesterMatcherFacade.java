@@ -5,6 +5,6 @@ import pl.mosek.applausematcher.dto.TesterBugCountDto;
 import java.util.List;
 import java.util.Set;
 
-public interface TesterMatcherService {
+public interface TesterMatcherFacade {
     List<TesterBugCountDto> findMatchingTesters(Set<String> countryCodes , Set<String> devices);
 }

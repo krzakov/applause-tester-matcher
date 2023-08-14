@@ -4,7 +4,7 @@ import pl.mosek.applausematcher.domain.Device
 import pl.mosek.applausematcher.exception.NotFoundException
 import pl.mosek.applausematcher.repository.DeviceRepository
 import pl.mosek.applausematcher.repository.TesterRepository
-import pl.mosek.applausematcher.service.TesterMatcherServiceImpl
+import pl.mosek.applausematcher.service.TesterMatcherFacadeImpl
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -19,7 +19,7 @@ class TesterMatcherServiceImplSpec extends Specification {
     def testerRepository = Stub(TesterRepository)
 
     @Shared
-    def testerMatcherService = new TesterMatcherServiceImpl(deviceRepository, testerRepository)
+    def testerMatcherService = new TesterMatcherFacadeImpl(deviceRepository, testerRepository)
 
     @Shared
     def iphone4 = new Device(1, "iPhone 4", null, null)

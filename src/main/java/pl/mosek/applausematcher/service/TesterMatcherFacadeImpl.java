@@ -1,5 +1,6 @@
 package pl.mosek.applausematcher.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TesterMatcherServiceImpl implements TesterMatcherService {
+public class TesterMatcherFacadeImpl implements TesterMatcherFacade {
 
     private final DeviceRepository deviceRepository;
     private final TesterRepository testerRepository;
 
+    @Transactional
     public List<TesterBugCountDto> findMatchingTesters(Set<String> countryCodes, Set<String> deviceDescriptions) {
 
         log.info("Finding testers for country codes: {} and devices: {}", countryCodes, deviceDescriptions);

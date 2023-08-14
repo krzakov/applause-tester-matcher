@@ -11,3 +11,6 @@ make sure you have exec access rights and you run the script from the root of th
 ## How to test
 Open following url in your browser: `http://localhost:8080/api/swagger-ui.html` \
 Swagger serves as frontend in that solution for the sake of brevity.
+Play with swagger endpoints as desired clicking:
+* `Try it out` button
+* `Execute` button
