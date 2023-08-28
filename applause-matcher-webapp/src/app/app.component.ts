@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {DeviceService} from './device.service';
 import {CountryService} from './country.service';
 import {TestersService} from "./testers.service";
-import {Tester} from "./tester.interface";
+import {Tester} from "./model/tester.interface";
+import {SearchParams} from "./component/search-form/search-params";
 
 @Component({
   selector: 'app-root',
@@ -13,15 +13,9 @@ import {Tester} from "./tester.interface";
 export class AppComponent implements OnInit {
   title = 'Applause Tester Matcher !';
 
-  dropdownSettings: IDropdownSettings = {};
-
-  devicesDropdownList: string[] = [];
-  devicesSelectedItems: string[] = [];
-
-  countriesDropdownList: string[] = [];
-  countriesSelectedItems: string[] = [];
-
-  testersResult: Tester[] = [];
+  devices: string[] = [];
+  countries: string[] = [];
+  testers: Tester[] = [];
 
   constructor(private deviceService: DeviceService,
               private countryService: CountryService,
@@ -29,41 +23,22 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'itemText',
-      textField: 'itemText',
-      selectAllText: 'select ALL',
-      unSelectAllText: 'unselect ALL',
-      itemsShowLimit: 6,
-      allowSearchFilter: false
-    };
-
     this.deviceService.getDevices().subscribe(devices => {
-      this.devicesDropdownList = devices;
+      this.devices = devices;
     });
 
     this.countryService.getCountries().subscribe(countries => {
-      this.countriesDropdownList = countries;
+      this.countries = countries;
     });
   }
 
-  findTesters() {
-    this.testerService.getTesters(this.countriesSelectedItems, this.devicesSelectedItems).subscribe(testers => {
-      this.testersResult = testers;
+  onSearch(event: SearchParams) {
+    this.testerService.getTesters(event.countries, event.devices).subscribe(testers => {
+      this.testers = testers;
     });
   }
 
-  clearResult() {
-    this.testersResult = [];
-  }
-
-  onSelectAllDevices(items: any) {
-    this.devicesSelectedItems = [];
-  }
-
-  onSelectAllCountries(items: any) {
-    this.countriesSelectedItems = [];
+  onClear() {
+    this.testers = [];
   }
 }
