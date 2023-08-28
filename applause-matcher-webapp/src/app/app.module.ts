@@ -5,9 +5,9 @@ import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 
 import {AppComponent} from './app.component';
 import {FormsModule} from "@angular/forms";
-import {DeviceService} from './device.service';
-import {CountryService} from "./country.service";
-import {TestersService} from "./testers.service";
+import {DeviceService} from './service/device.service';
+import {CountryService} from "./service/country.service";
+import {TestersService} from "./service/testers.service";
 import { SearchFormComponent } from './component/search-form/search-form.component';
 import { ResultComponent } from './component/result/result.component';
 

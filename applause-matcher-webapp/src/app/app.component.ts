@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {DeviceService} from './device.service';
-import {CountryService} from './country.service';
-import {TestersService} from "./testers.service";
+import {DeviceService} from './service/device.service';
+import {CountryService} from './service/country.service';
+import {TestersService} from "./service/testers.service";
 import {Tester} from "./model/tester.interface";
 import {SearchParams} from "./component/search-form/search-params";
 
