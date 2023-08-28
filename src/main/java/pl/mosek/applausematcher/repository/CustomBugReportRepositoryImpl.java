@@ -16,25 +16,24 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
-public class TesterCriteriaRepositoryImpl implements TesterRepository {
+public class CustomBugReportRepositoryImpl implements BugReportRepository {
 
     @PersistenceContext
     private final EntityManager entityManager;
 
     @Override
-    public List<TesterBugCountDto> findTestersByCountryAndDevicesOrderedByBugsDesc(Set<String> countryCodes, Set<Device> devices) {
-
+    public List<TesterBugCountDto> findMatchedTestersByCountryAndDevicesOrderedByBugsDesc(Set<String> countryCodes, Set<Device> devices) {
         var criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TesterBugCountDto> cq = criteriaBuilder.createQuery(TesterBugCountDto.class);
-        Root<Tester> rootTester = cq.from(Tester.class);
+        Root<BugReport> rootBugReport = cq.from(BugReport.class);
 
-        Join<Tester, Device> joinDevice = rootTester.join("devices", JoinType.INNER);
-        Join<Tester, BugReport> joinBugReport = rootTester.join("bugReports", JoinType.INNER);
+        Join<BugReport, Device> joinDevice = rootBugReport.join("device", JoinType.INNER);
+        Join<BugReport, Tester> joinTester = rootBugReport.join("tester", JoinType.INNER);
 
         Predicate whereClause = criteriaBuilder.conjunction();
 
         if (!countryCodes.isEmpty()) {
-            Predicate countryPredicate = rootTester.get("country").in(countryCodes);
+            Predicate countryPredicate = joinTester.get("country").in(countryCodes);
             whereClause = criteriaBuilder.and(whereClause, countryPredicate);
         }
 
@@ -45,22 +44,17 @@ public class TesterCriteriaRepositoryImpl implements TesterRepository {
 
         cq.select(criteriaBuilder.construct(
                         TesterBugCountDto.class,
-                        rootTester.get("id"),
-                        rootTester.get("country"),
-                        rootTester.get("firstName"),
-                        rootTester.get("lastName"),
-                        rootTester.get("lastLogin"),
-                        criteriaBuilder.count(joinBugReport)
+                        joinTester.get("id"),
+                        joinTester.get("firstName"),
+                        joinTester.get("lastName"),
+                        joinTester.get("country"),
+                        joinTester.get("lastLogin"),
+                        criteriaBuilder.count(joinTester)
                 )
         );
-        cq.groupBy(rootTester.get("id"),
-                rootTester.get("country"),
-                rootTester.get("firstName"),
-                rootTester.get("lastName"),
-                rootTester.get("lastLogin")
-        );
+        cq.groupBy(joinTester);
 
-        cq.orderBy(criteriaBuilder.desc(criteriaBuilder.count(joinBugReport)));
+        cq.orderBy(criteriaBuilder.desc(criteriaBuilder.count(rootBugReport)));
         cq.where(whereClause);
 
         TypedQuery<TesterBugCountDto> query = entityManager.createQuery(cq);

@@ -6,6 +6,7 @@ import pl.mosek.applausematcher.dto.MatchedTesterResponseDto;
 import pl.mosek.applausematcher.mapper.TesterMapper;
 import pl.mosek.applausematcher.service.DeviceService;
 import pl.mosek.applausematcher.service.TesterMatcherFacade;
+import pl.mosek.applausematcher.service.TesterService;
 
 import java.util.List;
 import java.util.Set;
@@ -18,11 +19,17 @@ public class TesterMatcherControllerImpl implements TesterMatcherController {
 
     private final TesterMatcherFacade testerMatcherFacade;
     private final DeviceService deviceService;
+    private final TesterService testerService;
     private final TesterMapper testerMapper;
 
     @GetMapping(value = "/devices", produces = APPLICATION_JSON_VALUE)
     public List<String> findAllDeviceDescriptions() {
         return deviceService.findDeviceDescriptions();
+    }
+
+    @GetMapping(value = "/testers/countries", produces = APPLICATION_JSON_VALUE)
+    public List<String> findAllCountryCodes() {
+        return testerService.findCountryCodes();
     }
 
     @GetMapping(value = "testers", produces = APPLICATION_JSON_VALUE)
@@ -33,7 +40,7 @@ public class TesterMatcherControllerImpl implements TesterMatcherController {
 
         return testerMatcherFacade.findMatchingTesters(countryCodes, deviceDescriptions)
                 .stream()
-                .map(testerMapper::mapToReponseDto)
+                .map(testerMapper::mapToResponseDto)
                 .toList();
     }
 }

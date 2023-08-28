@@ -5,10 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-import static jakarta.persistence.FetchType.LAZY;
-
 @Entity
 @Table(name = "devices")
 @Getter
@@ -20,10 +16,4 @@ public class Device {
     private long id;
 
     private String description;
-
-    @ManyToMany(mappedBy = "devices", fetch = LAZY)
-    private List<Tester> testers;
-
-    @OneToMany(mappedBy = "device", fetch = LAZY)
-    private List<BugReport> bugReports;
 }

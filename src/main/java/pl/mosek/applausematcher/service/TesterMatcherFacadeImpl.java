@@ -7,13 +7,8 @@ import org.springframework.stereotype.Service;
 import pl.mosek.applausematcher.domain.Device;
 import pl.mosek.applausematcher.dto.TesterBugCountDto;
 import pl.mosek.applausematcher.exception.NotFoundException;
-import pl.mosek.applausematcher.repository.DeviceRepository;
-import pl.mosek.applausematcher.repository.TesterRepository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,22 +16,26 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TesterMatcherFacadeImpl implements TesterMatcherFacade {
 
-    private final DeviceRepository deviceRepository;
-    private final TesterRepository testerRepository;
+    private final DeviceService deviceService;
+    private final BugReportService bugReportService;
 
     @Transactional
     public List<TesterBugCountDto> findMatchingTesters(Set<String> countryCodes, Set<String> deviceDescriptions) {
 
         log.info("Finding testers for country codes: {} and devices: {}", countryCodes, deviceDescriptions);
 
-        var descriptionToDevice = deviceRepository.findAllByDescriptionIn(deviceDescriptions)
+        var descriptionToDevice = deviceService.findDevicesByDescription(deviceDescriptions)
                 .stream()
                 .collect(Collectors.toMap(Device::getDescription, device -> device));
 
+        validateDeviceDescriptions(deviceDescriptions, descriptionToDevice);
+
+        return bugReportService.findMatchingTesters(countryCodes, new HashSet<>(descriptionToDevice.values()));
+    }
+
+    private static void validateDeviceDescriptions(Set<String> deviceDescriptions, Map<String, Device> descriptionToDevice) {
         deviceDescriptions.forEach(deviceDescription ->
                 Optional.ofNullable(descriptionToDevice.get(deviceDescription))
                         .orElseThrow(() -> new NotFoundException(deviceDescription)));
-
-        return testerRepository.findTestersByCountryAndDevicesOrderedByBugsDesc(countryCodes, new HashSet<>(descriptionToDevice.values()));
     }
 }

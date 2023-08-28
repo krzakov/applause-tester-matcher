@@ -1,12 +1,15 @@
 package pl.mosek.applausematcher.repository;
 
-import pl.mosek.applausematcher.domain.Device;
-import pl.mosek.applausematcher.dto.TesterBugCountDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import pl.mosek.applausematcher.domain.Tester;
 
 import java.util.List;
-import java.util.Set;
 
-public interface TesterRepository {
-        List<TesterBugCountDto> findTestersByCountryAndDevicesOrderedByBugsDesc(
-                Set<String> countryCodes, Set<Device> devices);
+@Repository
+public interface TesterRepository extends JpaRepository<Tester, Long> {
+
+        @Query("SELECT DISTINCT t.country FROM Tester t ORDER BY t.country")
+        List<String> findAllUniqueCountriesOrdered();
 }

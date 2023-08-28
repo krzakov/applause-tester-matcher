@@ -6,5 +6,6 @@ import pl.mosek.applausematcher.dto.TesterBugCountDto;
 
 @Mapper(componentModel = "spring")
 public interface TesterMapper {
-    MatchedTesterResponseDto mapToReponseDto(TesterBugCountDto testerBugCountDto);
+
+    MatchedTesterResponseDto mapToResponseDto(TesterBugCountDto testerBugCountDto);
 }

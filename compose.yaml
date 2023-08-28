@@ -10,26 +10,41 @@ services:
       - 'MYSQL_PASSWORD=secret'
       - 'MYSQL_ROOT_PASSWORD=verysecret'
       - 'MYSQL_USER=applause_matcher'
+      - 'MYSQL_PORT=3306'
       - 'TZ=Europe/Warsaw'
-    ports:
-      - '3306:3306'
     networks:
       - tm_network
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 3s
-      retries: 5
+      retries: 10
 
   spring-app:
+    container_name: spring-application
     build:
       context: .
       dockerfile: Dockerfile
     image: applause-matcher
     ports:
       - '8080:8080'
+    command: [ "java","-jar","/applause-matcher.jar" ]
     depends_on:
       mysql:
         condition: service_healthy
+    networks:
+      - tm_network
+
+  angular-app:
+    container_name: angular-application
+    build:
+      context: ./applause-matcher-webapp
+      dockerfile: Dockerfile
+    image: applause-matcher-angular
+    ports:
+      - '4200:4200'
+    command: [ "ng", "serve", "--host", "0.0.0.0", "--port", "4200" ]
+    depends_on:
+      - spring-app
     networks:
       - tm_network
 

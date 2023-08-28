@@ -41,6 +41,30 @@ public interface TesterMatcherController {
     List<String> findAllDeviceDescriptions();
 
     @Operation(
+            summary = "Find all country codes",
+            description = "Find all Testers country codes",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Found country codes",
+                            content = @Content(
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = String.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal Server Error",
+                            content = @Content(
+                                    schema = @Schema(implementation = ApiError.class)
+                            )
+                    )
+            }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    List<String> findAllCountryCodes();
+
+    @Operation(
             summary = "Find matching Testers for criteria",
             description = "Find matching Testers for criteria",
             responses = {
